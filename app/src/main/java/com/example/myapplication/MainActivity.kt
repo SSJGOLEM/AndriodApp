@@ -1,32 +1,60 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.myapplication.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
+    private var balance = 100.0 // Initial balance
+    private var incorrectAttempts = 0
+    private var passwordEditText: EditText? = null
+    private var depositEditText: EditText? = null
+    private var balanceTextView: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+        depositEditText = findViewById(R.id.depositEditText)
+        balanceTextView = findViewById(R.id.balanceTextView)
+    }
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    fun authenticate(view: View?) {
+        val enteredPassword = passwordEditText!!.text.toString()
+        if (enteredPassword == CORRECT_PASSWORD) {
+            setContentView(R.layout.main_screen)
+            balanceTextView = findViewById(R.id.balanceTextView)
+            updateBalanceText()
+        } else {
+            incorrectAttempts++
+            Toast.makeText(
+                this,
+                "Incorrect password. Attempts: $incorrectAttempts",
+                Toast.LENGTH_SHORT
+            ).show()
+            if (incorrectAttempts >= 3) {
+                finish() // Close the app after 3 incorrect attempts (you might want to implement a more secure mechanism)
+            }
+        }
+    }
 
-        val navView: BottomNavigationView = binding.navView
+    fun deposit(view: View?) {
+        val depositAmountStr = depositEditText!!.text.toString()
+        if (!depositAmountStr.isEmpty()) {
+            val depositAmount = depositAmountStr.toDouble()
+            balance += depositAmount
+            updateBalanceText()
+        }
+    }
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+    private fun updateBalanceText() {
+        balanceTextView!!.text = String.format("Balance: $%.2f", balance)
+    }
+
+    companion object {
+        private const val CORRECT_PASSWORD = "1234" // Change this to your desired password
     }
 }
