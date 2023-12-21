@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
         balanceTextView!!.text = String.format("Balance: $%.2f", balance)
     }
 
+    fun exit(view: View?) {
+        finish() // Close the activity and exit the app
+    }
+
     companion object {
         private const val CORRECT_PASSWORD = "1234" // Change this to your desired password
     }
