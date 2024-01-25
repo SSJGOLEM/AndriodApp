@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
             if (incorrectAttempts >= 3) {
-                finish() // Close the app after 3 incorrect attempts (you might want to implement a more secure mechanism)
+                finish() 
             }
         }
     }
@@ -59,6 +59,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val CORRECT_PASSWORD = "1234" // Change this to your desired password
+        private const val CORRECT_PASSWORD = "1234" // Change password
     }
 }
